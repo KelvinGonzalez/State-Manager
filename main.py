@@ -1,15 +1,14 @@
-from state_manager import *
 from getkey import getkey
 from app import app
 import os
 
+def update_screen():
+    os.system("cls" if os.name == "nt" else "clear")
+    app.call()
+
 if __name__ == "__main__":
-    data = {}
+    update_screen()
     while True:
-        os.system('cls')
-        app.call(data)
         key = getkey()
-        if key.isalnum():
-            data["alnum"] = key
-            key = "alnum"
-        app.transition(key, data)
+        if app.transition(key):
+            update_screen()

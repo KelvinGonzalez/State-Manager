@@ -1,12 +1,19 @@
-from state_manager import *
+from state_manager import App, State, Transition
 from functions import *
 from getkey import keys
 
 app = App()
 
-state_start = app.add_state(State(start))
-state_pressed = app.add_state(State(pressed))
+start_state = app.add_state(State(start))
+options_state = app.add_state(State(options))
+results_state = app.add_state(State(results))
+end_state = app.add_state(State(end))
 
-app.add_transition(state_start, Transition(keys.ENTER, state_pressed))
-app.add_transition(state_pressed, Transition("alnum", state_pressed, pressed_key))
-app.add_transition(state_pressed, Transition(keys.ESCAPE, state_start, restart))
+app.add_transition(start_state, Transition(keys.ENTER, options_state, setup))
+app.add_transition(options_state, Transition("1", results_state, options_action))
+app.add_transition(options_state, Transition("2", results_state, options_action))
+app.add_transition(options_state, Transition("3", results_state, options_action))
+app.add_transition(results_state, Transition(keys.ENTER, options_state))
+app.add_transition(options_state, Transition(keys.ESCAPE, end_state))
+app.add_transition(results_state, Transition(keys.ESCAPE, end_state))
+app.add_transition(end_state, Transition(keys.ESCAPE, start_state))
